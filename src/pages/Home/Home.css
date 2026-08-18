@@ -1,0 +1,169 @@
+.app-container {
+  width: 100vw;
+  height: 100vh;
+  border: 2px;
+  display: flex;
+  flex-direction: column;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+  position: relative;
+  background-color: var(--video-bg);
+}
+
+.app-header {
+  background: var(--primary-color);
+  color: var(--text-color);
+  padding: 14px 19px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+  z-index: 10;
+}
+
+.app-logo {
+  display: flex;
+  align-items: center;
+  margin-left: auto;
+  margin-right: 0px;
+  margin-bottom: 3px;
+}
+
+.app-title{
+  font-size: 15pt !important;
+  color: white;
+}
+
+.app-body {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: var(--primary-color);
+  padding: 0 15px;
+  overflow: hidden;
+}
+
+.video-player {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  background-color: var(--video-bg);
+}
+
+.app-footer {
+  background: var(--primary-color);
+  color: var(--text-color);
+  padding: 15px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  gap: 8px;
+  z-index: 10;
+}
+
+.control-button, .settings-control-button {
+  background: var(--white);
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: rgb(102, 102, 102);
+  margin-bottom: 4px;
+}
+
+.control-button{
+  font-size: 12.5px;
+}
+
+.settings-control-button{
+  font-size: 16px;
+}
+
+.number-button {
+  background: var(--white);
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  color: var(--black);
+  width: 32px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  margin-bottom: 4px;
+}
+
+.active-number-button {
+  background: var(--highlight);
+  border: 2px solid var(--primary-color);
+  border-radius: 6px;
+  color: var(--black);
+  width: 32px;
+  height: 24px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 4px;
+}
+
+.playback-actions-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: absolute;
+  right: 15px;
+  bottom: 12px;
+}
+
+.restart-floating-button {
+  position: absolute;
+  top: 16px;  /* Lo mueve hacia arriba */
+  left: -34px; /* Lo mueve a la izquierda (al otro lado) */
+  background: var(--white);
+  border: 2px solid var(--primary-color);
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  z-index: 30; /* Asegura que quede por encima del botón de play */
+  color: #000000;
+  font-size: 16px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+}
+
+.restart-floating-button:hover {
+  transform: scale(1.1); /* Un pequeño efecto visual al pasar el mouse */
+}
+
+.large-play-button {
+  background: var(--primary-color);
+  border: 4px solid var(--white);
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 20;
+}
+
+.large-play-icon {
+  color: var(--white);
+  font-size: 24px;
+  margin-left: 1.5px;
+}

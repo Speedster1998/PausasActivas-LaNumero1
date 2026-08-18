@@ -1,14 +1,15 @@
-const { app, BrowserWindow, Notification } = require('electron');
+const { app, BrowserWindow, Notification, screen, ipcMain } = require('electron');
 const path = require('path');
 
 let mainWindow;
+let alertWindow = null;
 
 function createWindow() {
     mainWindow = new BrowserWindow({
-        width: 1000,
-        height: 700,
-        minWidth: 800,
-        minHeight: 600,
+        width: 850,
+        height: 650,
+        minWidth: 700,
+        minHeight: 500,
         autoHideMenuBar: true, // Oculta la barra superior de "Archivo, Editar, Ver..."
         webPreferences: {
             nodeIntegration: false,
@@ -73,11 +74,110 @@ function mostrarNotificacion() {
 app.whenReady().then(() => {
   createWindow(); // Tu función que crea la ventana
   
-  iniciarTemporizadorPrueba(); // <--- ¡Agrega esta línea!
-  
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
     }
   });
+});
+
+function createAlertWindow() {
+  if (alertWindow) return;
+
+  const { width: screenWidth, height: screenHeight } = screen.getPrimaryDisplay().workAreaSize;
+  const alertWidth = 360;
+  const alertHeight = 115;
+
+  alertWindow = new BrowserWindow({
+    width: alertWidth,
+    height: alertHeight,
+    x: screenWidth - alertWidth - 20,
+    y: screenHeight - alertHeight - 20,
+    frame: false,
+    alwaysOnTop: true,
+    resizable: false,
+    show: false,
+    skipTaskbar: true,
+    webPreferences: {
+      preload: path.join(__dirname, 'preload.cjs'),
+      nodeIntegration: false,
+      contextIsolation: true
+    }
+  });
+
+  const isDev = !app.isPackaged;
+  if (isDev) {
+    alertWindow.loadURL('http://localhost:5173/#/alert'); // O http://localhost:5173/alert según tu router
+  } else {
+    alertWindow.loadFile(path.join(__dirname, '../dist/index.html'), { hash: 'alert' });
+  }
+
+  alertWindow.once('ready-to-show', () => {
+    alertWindow.show();
+  });
+
+  alertWindow.on('closed', () => {
+    alertWindow = null;
+  });
+}
+
+// --- SISTEMA DE NOTIFICACIONES Y PROGRAMACION ---
+let pauseTimeout = null;
+let currentConfig = { remindersEnabled: false, reminderTime: 5 };
+
+function programarSiguientePausa() {
+  if (pauseTimeout) clearTimeout(pauseTimeout);
+  if (!currentConfig.remindersEnabled) {
+    console.log("Recordatorios desactivados.");
+    return;
+  }
+
+  const ahora = new Date();
+  // La pausa es a las 3:15 p.m. (15:15)
+  let fechaPausa = new Date();
+  fechaPausa.setHours(15, 15, 0, 0);
+
+  // Restamos el tiempo de anticipación (reminderTime) en minutos
+  fechaPausa.setMinutes(fechaPausa.getMinutes() - currentConfig.reminderTime);
+
+  // Si la hora calculada ya pasó hoy, programamos para mañana
+  if (ahora.getTime() > fechaPausa.getTime()) {
+    fechaPausa.setDate(fechaPausa.getDate() + 1);
+  }
+
+  const tiempoRestante = fechaPausa.getTime() - ahora.getTime();
+  console.log(`Próxima notificación en ${Math.round(tiempoRestante / 60000)} minutos.`);
+
+  pauseTimeout = setTimeout(() => {
+    createAlertWindow(); // Mostramos el AlertBanner
+    programarSiguientePausa(); // Reprogramamos para el siguiente día
+  }, tiempoRestante);
+}
+
+ipcMain.on('guardar-configuracion', (event, config) => {
+  currentConfig = config;
+  console.log('Nueva configuración recibida desde Settings:', currentConfig);
+  programarSiguientePausa();
+});
+
+// Escuchar respuesta desde el componente AlertBanner
+ipcMain.on('alerta-respuesta', (event, accion) => {
+  if (alertWindow) {
+    alertWindow.close();
+    alertWindow = null;
+  }
+
+  if (accion === 'iniciar') {
+    if (mainWindow) {
+      if (mainWindow.isMinimized()) mainWindow.restore();
+      mainWindow.show();
+      mainWindow.focus();
+      mainWindow.webContents.send('iniciar-pausa');
+    }
+  } else if (accion === 'posponer') {
+    console.log("Pausa pospuesta 5 minutos");
+    setTimeout(() => {
+      createAlertWindow();
+    }, 5 * 60 * 1000);
+  }
 });

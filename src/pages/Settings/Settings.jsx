@@ -5,12 +5,17 @@ import './Settings.css';
 
 const Settings = () => {
   const navigate = useNavigate();
-  const [remindersEnabled, setRemindersEnabled] = useState(false);
-  const [reminderTime, setReminderTime] = useState('5');
+  const [remindersEnabled, setRemindersEnabled] = useState(() => {
+    const saved = localStorage.getItem('pausas_remindersEnabled');
+    return saved !== null ? JSON.parse(saved) : false;
+  });
+  const [reminderTime, setReminderTime] = useState(() => {
+    return localStorage.getItem('pausas_reminderTime') || '5';
+  });
   const [showFeedback, setShowFeedback] = useState(false);
 
   const saveConfig = () => {
-    // Aqui iría la lógica de guardado de la configuración
+    // Guardado local
     localStorage.setItem('pausas_remindersEnabled', JSON.stringify(remindersEnabled));
     localStorage.setItem('pausas_reminderTime', reminderTime);
 
@@ -18,6 +23,14 @@ const Settings = () => {
       remindersEnabled,
       reminderTime
     });
+
+    // Comunicar a Electron si está disponible
+    if (window.electron?.guardarConfiguracion) {
+      window.electron.guardarConfiguracion({
+        remindersEnabled,
+        reminderTime: parseInt(reminderTime, 10)
+      });
+    }
 
     // Mostrar feedback visual
     setShowFeedback(true);

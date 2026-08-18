@@ -1,0 +1,107 @@
+.alert-container {
+  display: flex;
+  flex-direction: column;
+  width: 100vw;
+  height: 100vh;
+  background-color: #ffffff;
+  border: 2px solid var(--primary-color, #00b4f0); 
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+  overflow: hidden;
+}
+
+.alert-header {
+  background-color: var(--primary-color, #00b4f0);
+  color: white;
+  padding: 10px 15px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.15);
+  gap: 10px;
+  /* Este truco mágico permite arrastrar la ventana en Electron */
+  -webkit-app-region: drag; 
+}
+
+/* Evitamos que el logo y el texto interfieran con el arrastre */
+.alert-logo, .alert-title, .header-divider {
+  -webkit-app-region: no-drag;
+}
+
+.header-divider {
+  width: 0.5px;
+  height: 28px;
+  background-color: #ffffff;
+  margin: 0 4px;
+  opacity: 0.9;
+}
+
+.alert-logo {
+  height: 28px;
+  width: auto;
+}
+
+.alert-title {
+  font-size: 15px;
+  margin: 0;
+  color: white !important;
+}
+
+/*
+.alert-body {
+  flex: 1;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  color: #333333;
+  font-size: 15px;
+  line-height: 1.4;
+}
+
+.alert-body p {
+  margin: 0;
+}*/
+
+.alert-actions {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px;
+  gap: 12px;
+}
+
+.btn-posponer {
+  flex: 1;
+  background-color: #f0f0f0;
+  border: 1px solid #cccccc;
+  color: #666666;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn-posponer:hover {
+  background-color: #e4e4e4;
+  color: #333;
+}
+
+.btn-iniciar {
+  flex: 1;
+  background-color: #28a745; /* Verde llamativo estilo "Guardar" */
+  border: none;
+  color: white;
+  padding: 8px 0;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: bold;
+  transition: all 0.2s ease;
+}
+
+.btn-iniciar:hover {
+  background-color: #218838;
+}

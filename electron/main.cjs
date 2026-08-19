@@ -8,10 +8,10 @@ let isQuitting = null;
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 650,
-    minWidth: 700,
-    minHeight: 500,
+    width: 700,
+    height: 663,
+    minWidth: 500,
+    minHeight: 538,
     autoHideMenuBar: true, // Oculta la barra superior de "Archivo, Editar, Ver..."
     icon: path.join(__dirname, '../public/favicon.ico'),
     webPreferences: {
@@ -148,7 +148,7 @@ function programarSiguientePausa() {
   const ahora = new Date();
   // La pausa es a las 3:15 p.m. (15:15)
   let fechaPausa = new Date();
-  fechaPausa.setHours(15, 36, 0, 0);
+  fechaPausa.setHours(15, 15, 0, 0);
 
   // Restamos el tiempo de anticipación (reminderTime) en minutos
   fechaPausa.setMinutes(fechaPausa.getMinutes() - currentConfig.reminderTime);

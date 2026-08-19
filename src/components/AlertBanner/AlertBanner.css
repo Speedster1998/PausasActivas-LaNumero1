@@ -47,23 +47,6 @@
   color: white !important;
 }
 
-/*
-.alert-body {
-  flex: 1;
-  padding: 15px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  color: #333333;
-  font-size: 15px;
-  line-height: 1.4;
-}
-
-.alert-body p {
-  margin: 0;
-}*/
-
 .alert-actions {
   display: flex;
   justify-content: space-between;
@@ -88,13 +71,13 @@
 }
 
 .btn-iniciar {
-  background-color: #28a745;
+  background-color: var(--primary-color);
   border: none;
   color: white;
 }
 
 .btn-iniciar:hover {
-  background-color: #218838;
+  background-color: #008ee0;
 }
 
 .btn-posponer {

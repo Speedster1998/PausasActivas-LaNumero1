@@ -84,7 +84,6 @@ const Settings = () => {
               <option value="1">1 minuto antes</option>
               <option value="5">5 minutos antes</option>
               <option value="10">10 minutos antes</option>
-              <option value="30">30 minutos antes</option>
             </select>
           </div>
         )}
@@ -124,7 +123,7 @@ const Settings = () => {
             <h2>Cambios realizados</h2>
             <p>La configuración se ha actualizado correctamente.</p>
 
-            <button className="btn-save" onClick={() => setShowFeedback(false)}>Aceptar</button>
+            <button className="btn-success" onClick={() => setShowFeedback(false)}>Aceptar</button>
           </div>
         </div>
       )}

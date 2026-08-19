@@ -125,11 +125,10 @@ input:checked + .slider:before {
 }
 
 .settings-select:focus {
-  border-color: #4CAF50;
+  border-color: var(--blue-primary);
 }
 
-.btn-save {
-  background-color: #28a745;
+.btn-save, .btn-success {
   color: white;
   border: none;
   padding: 0.5rem 1rem;
@@ -142,7 +141,19 @@ input:checked + .slider:before {
   transition: background 0.3s ease;
 }
 
+.btn-save{
+  background-color: var(--blue-primary);
+}
+
 .btn-save:hover {
+  background-color: var(--dark-primary);
+}
+
+.btn-success{
+  background-color: #28a745;
+}
+
+.btn-success:hover{
   background-color: #218838;
 }
 

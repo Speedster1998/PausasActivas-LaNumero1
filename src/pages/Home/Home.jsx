@@ -3,7 +3,7 @@ import '../Home/Home.css';
 import { useNavigate } from 'react-router-dom';
 import { IoSettingsSharp } from "react-icons/io5";
 import { FaStepBackward, FaStepForward } from "react-icons/fa";
-
+import CountdownOverlay from '../Countdown/CountdownOverlay';
 
 const VIDEOS = [
   { id: 1, src: '/videos/ejercicio_01.mp4', title: 'Pausa 1' },
@@ -16,42 +16,75 @@ const Home = () => {
     const videoRef = useRef(null);
     const [isPlaying, setIsPlaying] = useState(false);
     const [currentVideoIndex, setCurrentVideoIndex] = useState(0); // Estado del video actual (0 = Video 1)
+    const [isCounting, setIsCounting] = useState(false);
     const remindersActive = JSON.parse(localStorage.getItem('pausas_remindersEnabled')) ?? false;
     const timeBefore = localStorage.getItem('pausas_reminderTime') || '5';
+
+    const startCountdown = () => {
+        setIsPlaying(false);
+        if (videoRef.current) {
+            videoRef.current.pause();
+            videoRef.current.currentTime = 0;
+        }
+        setIsCounting(true);
+    };
+
+    const handleCountdownComplete = () => {
+        setIsCounting(false);
+        if (videoRef.current) {
+            videoRef.current.play();
+            setIsPlaying(true);
+        }
+    };
 
     useEffect(() => {
         // Verificamos que el puente exista (por si corres la app en web por error)
         if (window.electron) {
+            // 1. RECEPTOR DE SEÑALES DEL ELECTRÓN
             window.electron.onIniciarPausa(() => {
                 console.log("¡Señal recibida desde la notificación nativa!");
-                if (videoRef.current) {
-                    videoRef.current.play(); // Reproducimos el video
-                    setIsPlaying(true);      // Actualizamos el botón de Play a Pausa
-                }
+                startCountdown();
             });
+
+            // 2. EMISOR DE CONFIGURACIÓN A ELECTRON AL ARRANCAR (Lo nuevo)
+            const guardadoHabilitado = JSON.parse(localStorage.getItem('pausas_remindersEnabled')) || false;
+            const tiempoGuardado = localStorage.getItem('pausas_reminderTime') || '5';
+            const tiempoPosponer = localStorage.getItem('pausas_snoozeTime') || '0';
+            
+            window.electron.guardarConfiguracion({
+                remindersEnabled: guardadoHabilitado,
+                reminderTime: parseInt(tiempoGuardado, 10),
+                snoozeTime: parseInt(tiempoPosponer, 10)
+            });
+            
+            console.log("Configuración inicial enviada a Electron en segundo plano.");
         }
     }, []);
 
     // Cambiar a un video específico
     const changeVideo = (index) => {
         setCurrentVideoIndex(index);
-        setIsPlaying(true);
-        // Pequeño timeout para dar tiempo a que React actualice el src antes de dar .play()
+        setIsPlaying(false);
+        // Pequeño timeout para dar tiempo a que React actualice el src antes de iniciar la cuenta
         setTimeout(() => {
-            if (videoRef.current) {
-                videoRef.current.play();
-            }
+            startCountdown();
         }, 50);
     }
 
     const togglePlay = () => {
+        if (isCounting) return;
         if (videoRef.current) {
             if (isPlaying) {
                 videoRef.current.pause();
+                setIsPlaying(false);
             } else {
-                videoRef.current.play();
+                if (videoRef.current.currentTime === 0) {
+                    startCountdown();
+                } else {
+                    videoRef.current.play();
+                    setIsPlaying(true);
+                }
             }
-            setIsPlaying(!isPlaying);
         }
     };
 
@@ -72,19 +105,22 @@ const Home = () => {
             {/* Cabecera */}
             <div className="app-header">
                 <h1 className='app-title'>Haga una pausa. Pausas Activas.</h1>
-                <img src="./src/images/La_Nro_1_Logo_blanco.png" alt="lanumero1" class="app-logo" width={85} />
+                <img src="./src/images/La_Nro_1_Logo_blanco.png" alt="lanumero1" className="app-logo" width={85} />
             </div>
 
             {/* Reproductor de Video */}
             <div className="app-body">
-                <video
-                    key={VIDEOS[currentVideoIndex].src} // La key fuerza el re-render limpio cuando cambia el video
-                    ref={videoRef}
-                    className="video-player"
-                    src={VIDEOS[currentVideoIndex].src}
-                    preload='auto'
-                    onEnded={() => setIsPlaying(false)}
-                />
+                <div style={{ position: 'relative', width: '100%', height: '100%' }}>
+                    <CountdownOverlay isCounting={isCounting} onComplete={handleCountdownComplete} />
+                    <video
+                        key={VIDEOS[currentVideoIndex].src} // La key fuerza el re-render limpio cuando cambia el video
+                        ref={videoRef}
+                        className="video-player"
+                        src={VIDEOS[currentVideoIndex].src}
+                        preload='auto'
+                        onEnded={handleNext}
+                    />
+                </div>
             </div>
 
             {/* Pie de página / Controles */}
@@ -115,9 +151,7 @@ const Home = () => {
                 <div className='playback-actions-container'>
                     <div className="restart-floating-button" onClick={() => {
                         if (videoRef.current) {
-                            videoRef.current.currentTime = 0;
-                            videoRef.current.play();
-                            setIsPlaying(true);
+                            startCountdown();
                         }
                     }} title='Reiniciar'>
                         <span><strong>&#8634;</strong></span> {/* Reiniciar video */}

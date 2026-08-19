@@ -1,7 +1,14 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import './AlertBanner.css';
 
 const AlertBanner = () => {
+  const [isSnoozed, setIsSnoozed] = useState(false);
+  const snoozeTime = parseInt(localStorage.getItem('pausas_snoozeTime') || '0', 10);
+  const location = useLocation();
+  const searchParams = new URLSearchParams(location.search);
+  const isSecondTime = searchParams.get('snoozed') === 'true';
+
   const handleAceptar = () => {
     if (window.electron?.responderAlerta) {
       window.electron.responderAlerta('iniciar');
@@ -9,10 +16,26 @@ const AlertBanner = () => {
   };
 
   const handlePosponer = () => {
+    setIsSnoozed(true);
+    setTimeout(() => {
+      if (window.electron?.responderAlerta) {
+        window.electron.responderAlerta('posponer');
+      }
+    }, 10000);
+  };
+
+  const handleCerrar = () => {
     if (window.electron?.responderAlerta) {
-      window.electron.responderAlerta('posponer');
+      window.electron.responderAlerta('cerrar');
     }
   };
+
+  let snoozeText = "";
+  if (snoozeTime === 0) {
+    snoozeText = "Pospuesto para mañana";
+  } else {
+    snoozeText = `Pospuesto para ${snoozeTime} minutos`;
+  }
 
   return (
     <div className="alert-container">
@@ -22,8 +45,19 @@ const AlertBanner = () => {
         <img src="./src/images/La_Nro_1_Logo_blanco.png" alt="Logo" className="alert-logo" />
       </div>
       <div className="alert-actions">
-        <button className="btn-iniciar" onClick={handleAceptar}>AHORA</button>
-        <button className="btn-posponer" onClick={handlePosponer}>POSTERGAR</button>
+        <img src="./src/images/office-worker.png" className='img-office-worker' alt='office-worker' />
+        {isSnoozed ? (
+          <span className="snooze-message">{snoozeText}</span>
+        ) : (
+          <>
+            <button className="btn-iniciar" onClick={handleAceptar}>INICIAR</button>
+            {isSecondTime && snoozeTime > 0 ? (
+              <button className="btn-posponer" onClick={handleCerrar}>CERRAR</button>
+            ) : (
+              <button className="btn-posponer" onClick={handlePosponer}>POSPONER</button>
+            )}
+          </>
+        )}
       </div>
     </div>
   );

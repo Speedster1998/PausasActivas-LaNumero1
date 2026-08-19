@@ -10,10 +10,12 @@ const App = () => {
     if (window.electron?.guardarConfiguracion) {
       const savedEnabled = localStorage.getItem('pausas_remindersEnabled');
       const savedTime = localStorage.getItem('pausas_reminderTime');
+      const savedSnooze = localStorage.getItem('pausas_snoozeTime');
       
       const config = {
         remindersEnabled: savedEnabled !== null ? JSON.parse(savedEnabled) : false,
-        reminderTime: parseInt(savedTime || '5', 10)
+        reminderTime: parseInt(savedTime || '5', 10),
+        snoozeTime: parseInt(savedSnooze || '0', 10)
       };
       
       window.electron.guardarConfiguracion(config);

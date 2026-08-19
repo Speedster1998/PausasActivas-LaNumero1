@@ -12,23 +12,29 @@ const Settings = () => {
   const [reminderTime, setReminderTime] = useState(() => {
     return localStorage.getItem('pausas_reminderTime') || '5';
   });
+  const [snoozeTime, setSnoozeTime] = useState(() => {
+    return localStorage.getItem('pausas_snoozeTime') || '0';
+  });
   const [showFeedback, setShowFeedback] = useState(false);
 
   const saveConfig = () => {
     // Guardado local
     localStorage.setItem('pausas_remindersEnabled', JSON.stringify(remindersEnabled));
     localStorage.setItem('pausas_reminderTime', reminderTime);
+    localStorage.setItem('pausas_snoozeTime', snoozeTime);
 
     console.log("Configuración guardada localmente:", {
       remindersEnabled,
-      reminderTime
+      reminderTime,
+      snoozeTime
     });
 
     // Comunicar a Electron si está disponible
     if (window.electron?.guardarConfiguracion) {
       window.electron.guardarConfiguracion({
         remindersEnabled,
-        reminderTime: parseInt(reminderTime, 10)
+        reminderTime: parseInt(reminderTime, 10),
+        snoozeTime: parseInt(snoozeTime, 10)
       });
     }
 
@@ -74,10 +80,29 @@ const Settings = () => {
               value={reminderTime}
               onChange={(e) => setReminderTime(e.target.value)}
             >
+              <option value="0.5">30 segundos antes</option>
+              <option value="1">1 minuto antes</option>
               <option value="5">5 minutos antes</option>
               <option value="10">10 minutos antes</option>
               <option value="30">30 minutos antes</option>
-              <option value="60">1 hora antes</option>
+            </select>
+          </div>
+        )}
+
+        {remindersEnabled && (
+          <div className="settings-option animated-dropdown">
+            <div className="settings-option-text">
+              <h2>Tiempo para posponer</h2>
+              <p>¿Cuánto tiempo debe pasar para volver a notificarte si pospones la alerta?</p>
+            </div>
+            <select 
+              className="settings-select"
+              value={snoozeTime}
+              onChange={(e) => setSnoozeTime(e.target.value)}
+            >
+              <option value="0">Nunca</option>
+              <option value="5">5 minutos después</option>
+              <option value="10">10 minutos después</option>
             </select>
           </div>
         )}

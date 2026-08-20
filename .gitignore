@@ -22,3 +22,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Salidas de empaquetado de Electron
+release/
+dist/
+dist-electron/
+*.exe
+*.blockmap

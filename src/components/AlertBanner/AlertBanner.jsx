@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import './AlertBanner.css';
 
+import logoBlanco from '../../images/La_Nro_1_Logo_blanco.png';
+import officeWorker from '../../images/office-worker.png';
+
 const AlertBanner = () => {
   const [isSnoozed, setIsSnoozed] = useState(false);
   const snoozeTime = parseInt(localStorage.getItem('pausas_snoozeTime') || '0', 10);
@@ -42,10 +45,10 @@ const AlertBanner = () => {
       <div className="alert-header">
         <span className="alert-title">Haga una Pausa</span>
         <div className='header-divider'></div>
-        <img src="./src/images/La_Nro_1_Logo_blanco.png" alt="Logo" className="alert-logo" />
+        <img src={logoBlanco} alt="Logo" className="alert-logo" />
       </div>
       <div className="alert-actions">
-        <img src="./src/images/office-worker.png" className='img-office-worker' alt='office-worker' />
+        <img src={officeWorker} className='img-office-worker' alt='office-worker' />
         {isSnoozed ? (
           <span className="snooze-message">{snoozeText}</span>
         ) : (

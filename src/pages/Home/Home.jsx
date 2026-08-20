@@ -5,10 +5,12 @@ import { IoSettingsSharp } from "react-icons/io5";
 import { FaStepBackward, FaStepForward } from "react-icons/fa";
 import CountdownOverlay from '../Countdown/CountdownOverlay';
 
+import logoBlanco from "../../images/La_Nro_1_Logo_blanco.png";
+
 const VIDEOS = [
-  { id: 1, src: '/videos/ejercicio_01.mp4', title: 'Pausa 1' },
-  { id: 2, src: '/videos/ejercicio_02.mp4', title: 'Pausa 2' },
-  { id: 3, src: '/videos/ejercicio_03.mp4', title: 'Pausa 3' },
+  { id: 1, src: './videos/ejercicio_01.mp4', title: 'Pausa 1' },
+  { id: 2, src: './videos/ejercicio_02.mp4', title: 'Pausa 2' },
+  { id: 3, src: './videos/ejercicio_03.mp4', title: 'Pausa 3' },
 ];
 
 const Home = () => {
@@ -105,7 +107,7 @@ const Home = () => {
             {/* Cabecera */}
             <div className="app-header">
                 <h1 className='app-title'>Haga una pausa. Pausas Activas.</h1>
-                <img src="./src/images/La_Nro_1_Logo_blanco.png" alt="lanumero1" className="app-logo" width={85} />
+                <img src={logoBlanco} alt="lanumero1" className="app-logo" width={85} />
             </div>
 
             {/* Reproductor de Video */}

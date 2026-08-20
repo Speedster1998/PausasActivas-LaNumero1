@@ -10,8 +10,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 700,
     height: 663,
-    minWidth: 500,
-    minHeight: 538,
+    minWidth: 600,
+    minHeight: 563,
     autoHideMenuBar: true, // Oculta la barra superior de "Archivo, Editar, Ver..."
     icon: path.join(__dirname, '../public/favicon.ico'),
     webPreferences: {

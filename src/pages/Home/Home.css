@@ -145,7 +145,7 @@
 }
 
 .restart-floating-button:hover {
-  transform: scale(1.1); /* Un pequeño efecto visual al pasar el mouse */
+  transform: scale(1.1);
 }
 
 .large-play-button {

@@ -17,7 +17,6 @@ const Settings = () => {
   });
   const [showFeedback, setShowFeedback] = useState(false);
 
-  // NUEVA LÓGICA: Interceptamos el cambio del recordatorio
   const handleReminderChange = (e) => {
     const newReminder = e.target.value;
     setReminderTime(newReminder);
@@ -29,7 +28,6 @@ const Settings = () => {
   };
 
   const saveConfig = () => {
-    // Guardado local
     localStorage.setItem('pausas_remindersEnabled', JSON.stringify(remindersEnabled));
     localStorage.setItem('pausas_reminderTime', reminderTime);
     localStorage.setItem('pausas_snoozeTime', snoozeTime);
@@ -44,7 +42,7 @@ const Settings = () => {
     if (window.electron?.guardarConfiguracion) {
       window.electron.guardarConfiguracion({
         remindersEnabled,
-        reminderTime: parseFloat(reminderTime), // Se usa parseFloat para soportar el 0.5 (30 seg)
+        reminderTime: parseFloat(reminderTime),
         snoozeTime: parseInt(snoozeTime, 10)
       });
     }
@@ -92,7 +90,7 @@ const Settings = () => {
             <select
               className="settings-select"
               value={reminderTime}
-              onChange={handleReminderChange} // Usamos la nueva función aquí
+              onChange={handleReminderChange}
             >
               <option value="0.5">30 segundos antes</option>
               <option value="1">1 minuto antes</option>

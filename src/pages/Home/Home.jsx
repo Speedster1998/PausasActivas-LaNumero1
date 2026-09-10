@@ -40,7 +40,7 @@ const Home = () => {
     };
 
     useEffect(() => {
-        // Verificamos que el puente exista (por si corres la app en web por error)
+        // Verificamos que el puente exista
         if (window.electron) {
             // 1. RECEPTOR DE SEÑALES DEL ELECTRÓN
             window.electron.onIniciarPausa(() => {
@@ -63,7 +63,6 @@ const Home = () => {
         }
     }, []);
 
-    // Cambiar a un video específico
     const changeVideo = (index) => {
         setCurrentVideoIndex(index);
         setIsPlaying(false);
@@ -115,7 +114,7 @@ const Home = () => {
                 <div style={{ position: 'relative', width: '100%', height: '100%' }}>
                     <CountdownOverlay isCounting={isCounting} onComplete={handleCountdownComplete} />
                     <video
-                        key={VIDEOS[currentVideoIndex].src} // La key fuerza el re-render limpio cuando cambia el video
+                        key={VIDEOS[currentVideoIndex].src}
                         ref={videoRef}
                         className="video-player"
                         src={VIDEOS[currentVideoIndex].src}

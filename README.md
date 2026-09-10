@@ -11,21 +11,29 @@ Aplicación de escritorio desarrollada con **React**, **Vite** y **Electron** pa
 ## Instalación y Desarrollo:
 1. Clona o descarga el repositorio y abre una terminal en la carpeta del proyecto.
 2. Instala todas las dependencias del proyecto:
-`pnpm install`
+    ```bash
+    pnpm install
+    ```
 
 ## Pasos para probar la app en el navegador (solo interfaz web):
 1. Ejecuta el siguiente comando:
-`pnpm run dev`
+    ```bash
+    pnpm run dev
+    ```
 2. Ingresa al http://localhost:5173/ en tu navegador para abrir la app.
 
 ## Pasos para probar la app de escritorio:
 Para probar la app con toda la funcionalidad nativa de escritorio (bandeja, alertas e IPC), ejecuta el siguiente comando:
-`pnpm run desktop`
+```bash
+pnpm run desktop
+```
 
 ## Pasos para crear el instalador de Windows:
 1. Abre una terminal en la carpeta del proyecto.
 2. Ejecuta el siguiente comando:
-`pnpm run dist`
+    ```bash
+    pnpm run dist
+    ```
 3. Una vez finalizado el proceso, ve a la carpeta generada:
 `release/`
 4. Ahí encontrarás el instalador `Pausas Activas Setup.exe` listo para instalar y probar en cualquier equipo con Windows.

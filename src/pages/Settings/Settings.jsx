@@ -17,6 +17,17 @@ const Settings = () => {
   });
   const [showFeedback, setShowFeedback] = useState(false);
 
+  // NUEVA LÓGICA: Interceptamos el cambio del recordatorio
+  const handleReminderChange = (e) => {
+    const newReminder = e.target.value;
+    setReminderTime(newReminder);
+
+    // Si el tiempo de postergación actual supera al nuevo recordatorio, lo regresamos a "Nunca"
+    if (parseFloat(snoozeTime) > parseFloat(newReminder)) {
+      setSnoozeTime('0');
+    }
+  };
+
   const saveConfig = () => {
     // Guardado local
     localStorage.setItem('pausas_remindersEnabled', JSON.stringify(remindersEnabled));
@@ -33,7 +44,7 @@ const Settings = () => {
     if (window.electron?.guardarConfiguracion) {
       window.electron.guardarConfiguracion({
         remindersEnabled,
-        reminderTime: parseInt(reminderTime, 10),
+        reminderTime: parseFloat(reminderTime), // Se usa parseFloat para soportar el 0.5 (30 seg)
         snoozeTime: parseInt(snoozeTime, 10)
       });
     }
@@ -41,6 +52,9 @@ const Settings = () => {
     // Mostrar feedback visual
     setShowFeedback(true);
   };
+
+  // Convertimos a número para evaluar qué opciones de postergación mostrar
+  const currentReminderValue = parseFloat(reminderTime);
 
   return (
     <div className="settings-container">
@@ -53,15 +67,15 @@ const Settings = () => {
 
       <div className="settings-card">
         <h1 className="settings-title">Configuración</h1>
-        
+
         <div className="settings-option">
           <div className="settings-option-text">
             <h2>Recordatorios</h2>
             <p>Activar notificaciones para las pausas activas.</p>
           </div>
           <label className="switch">
-            <input 
-              type="checkbox" 
+            <input
+              type="checkbox"
               checked={remindersEnabled}
               onChange={(e) => setRemindersEnabled(e.target.checked)}
             />
@@ -75,10 +89,10 @@ const Settings = () => {
               <h2>Tiempo de anticipación</h2>
               <p>Las pausas activas son a las 3:15 p.m. ¿Cuánto tiempo antes deseas que te avisemos?</p>
             </div>
-            <select 
+            <select
               className="settings-select"
               value={reminderTime}
-              onChange={(e) => setReminderTime(e.target.value)}
+              onChange={handleReminderChange} // Usamos la nueva función aquí
             >
               <option value="0.5">30 segundos antes</option>
               <option value="1">1 minuto antes</option>
@@ -94,14 +108,16 @@ const Settings = () => {
               <h2>Tiempo para posponer</h2>
               <p>¿Cuánto tiempo debe pasar para volver a notificarte si pospones la alerta?</p>
             </div>
-            <select 
+            <select
               className="settings-select"
               value={snoozeTime}
               onChange={(e) => setSnoozeTime(e.target.value)}
             >
               <option value="0">Nunca</option>
-              <option value="5">5 minutos después</option>
-              <option value="10">10 minutos después</option>
+              {/* Renderizado condicional: solo muestra tiempos menores o iguales a la anticipación */}
+              {currentReminderValue >= 1 && <option value="1">1 minuto después</option>}
+              {currentReminderValue >= 5 && <option value="5">5 minutos después</option>}
+              {currentReminderValue >= 10 && <option value="10">10 minutos después</option>}
             </select>
           </div>
         )}
@@ -113,10 +129,10 @@ const Settings = () => {
       {showFeedback && (
         <div className="modal-overlay">
           <div className="modal-content">
-            <div class="success-icon-container">
-              <svg viewBox="0 0 52 52" class="success-icon-svg">
-                <circle class="success-icon-circle" cx="26" cy="26" r="25" fill="none"/>
-                <path class="success-icon-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8"/>
+            <div className="success-icon-container">
+              <svg viewBox="0 0 52 52" className="success-icon-svg">
+                <circle className="success-icon-circle" cx="26" cy="26" r="25" fill="none" />
+                <path className="success-icon-check" fill="none" d="M14.1 27.2l7.1 7.2 16.7-16.8" />
               </svg>
             </div>
 

@@ -12,6 +12,7 @@ function createWindow() {
     height: 662,
     minWidth: 600,
     minHeight: 562,
+    show: false,
     autoHideMenuBar: true, // Oculta la barra superior de "Archivo, Editar, Ver..."
     icon: path.join(__dirname, '../public/favicon.ico'),
     webPreferences: {
@@ -77,17 +78,29 @@ app.on('window-all-closed', () => {
 });
 
 app.whenReady().then(() => {
-  createWindow(); // Tu función que crea la ventana
+  const isHidden = process.argv.includes('--hidden');
+
+  createWindow();
   createTray();
 
+  // Si el usuario abrió la app manualmente (no viene con --hidden), la mostramos
+  if (!isHidden && mainWindow) {
+    mainWindow.show();
+  }
+
+  // Registramos el autoarranque pasando el flag --hidden para Windows
   app.setLoginItemSettings({
     openAtLogin: true,
-    openAsHidden: true
+    openAsHidden: true,
+    args: ['--hidden']
   });
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
       createWindow();
+      mainWindow.show();
+    } else if (mainWindow) {
+      mainWindow.show();
     }
   });
 });

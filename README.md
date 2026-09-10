@@ -1,5 +1,5 @@
 # Pausas Activas (La Numero 1)
-Aplicación de escritorio desarrollada con **React**, **Vite** y **Electron** para promover la salud laboral mediante pausas activas programadas en las oficinas centrales de la empresa _La Número 1_. Incluye un reproductor de ejercicios en video, alertas interactivas y configuraciones personalizadas.
+Aplicación de escritorio desarrollada con **React**, **Vite** y **Electron** para promover la salud laboral mediante pausas activas programadas en las oficinas centrales de la empresa _La Número 1_. Incluye un reproductor de ejercicios en video, alertas interactivas y configuraciones personalizadas por el usuario.
 
 ## Requisitos Previos:
 * [Node.js](https://nodejs.org/) (versión LTS recomendada)
@@ -36,4 +36,4 @@ pnpm run desktop
     ```
 3. Una vez finalizado el proceso, ve a la carpeta generada:
 `release/`
-4. Ahí encontrarás el instalador `Pausas Activas Setup.exe` listo para instalar y probar en cualquier equipo con Windows.
+4. Ahí encontrarás el instalador `Pausas Activas Setup [num_version].exe` listo para instalar y probar en cualquier equipo con Windows.

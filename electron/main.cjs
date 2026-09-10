@@ -42,22 +42,22 @@ function createWindow() {
 function createTray() {
   const iconPath = path.join(__dirname, '../public/favicon.ico'); // Asegúrate de tener este icono
   tray = new Tray(iconPath);
-  
+
   const contextMenu = Menu.buildFromTemplate([
-    { 
-      label: 'Abrir Pausas Activas', 
+    {
+      label: 'Abrir Pausas Activas',
       click: () => {
         mainWindow.show();
         mainWindow.focus();
-      } 
+      }
     },
     { type: 'separator' },
-    { 
-      label: 'Cerrar por completo', 
+    {
+      label: 'Cerrar por completo',
       click: () => {
         isQuitting = true;
         app.quit();
-      } 
+      }
     }
   ]);
 
@@ -89,11 +89,13 @@ app.whenReady().then(() => {
   }
 
   // Registramos el autoarranque pasando el flag --hidden para Windows
-  app.setLoginItemSettings({
-    openAtLogin: true,
-    openAsHidden: true,
-    args: ['--hidden']
-  });
+  if (app.isPackaged) {
+    app.setLoginItemSettings({
+      openAtLogin: true,
+      openAsHidden: true,
+      args: ['--hidden']
+    });
+  }
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {
@@ -131,7 +133,7 @@ function createAlertWindow(isSnoozed = false) {
 
   const isDev = !app.isPackaged;
   const hash = isSnoozed ? 'alert?snoozed=true' : 'alert';
-  
+
   if (isDev) {
     alertWindow.loadURL(`http://localhost:5173/#/${hash}`); // O http://localhost:5173/alert según tu router
   } else {
